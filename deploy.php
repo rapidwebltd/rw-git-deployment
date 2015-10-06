@@ -146,11 +146,11 @@ $commands[] = sprintf('rsync -rltgoDzvO %s %s', $config->directories->temporary,
 
 foreach ($commands as $command) {
     
-	set_time_limit(60*5); // Reset the time limit for each command
+	set_time_limit(60*5);
 	
 	$output = array();
 	
-	exec($command." 2>&1", $output, $returnCode); // Execute the command
+	exec($command." 2>&1", $output, $returnCode);
 	
 	if ($returnCode !== 0) {
 		throw new \Exception("Deployment error - Return code ".$returnCode." received when attempting to run command: ".$command);
