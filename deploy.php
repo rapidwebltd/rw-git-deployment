@@ -139,7 +139,7 @@ if (!trim($config->directories->deployment)) {
 }
 
 if (!is_dir($config->directories->deployment)) {
-    throw new \Exception("The deployment directory could not be created. Check the user running this script has write permissions on the containing directory.");
+    throw new \Exception("The deployment directory does not seem to exist. Please create the directory or check the directory specified in the configuration file..");
 }
 
 $commands[] = sprintf('rsync -rltgoDzvO %s %s', $config->directories->temporary, $config->directories->deployment);
