@@ -93,10 +93,68 @@ if (!$request) {
     throw new \Exception("Web hook request body was not present or is invalid JSON.");
 }
 
+if (!trim($config->git->branch)) {
+    throw new \Exception("The git branch specified in the configuration file is currenty blank. Please change this in the configuration file.");
+}
+
 $fullGitRef = "refs/heads/".$config->git->branch;
 
 if ($request->ref != $fullGitRef) {
     throw new \Exception("This push was not for the configured branch, therefore it is being ignored. If this is incorrect, please check the branch defined in the configuration file.");
+}
+
+if (!trim($config->git->repositoryUrl)) {
+    throw new \Exception("The git repository url specified in the configuration file is currenty blank. Please change this in the configuration file.");
+}
+
+if (!trim($config->directories->temporary)) {
+    throw new \Exception("The temporary directory specified in the configuration file is currenty blank. Please change this in the configuration file.");
+}
+
+if (!is_dir($config->directories->temporary)) {
+
+    if (!mkdir($config->directories->temporary)) {
+        throw new \Exception("The temporary directory could not be created. Check the user running this script has write permissions on the containing directory.");
+    }
+    
+    $commands[] = printf("git clone --depth=1 --branch %s %s %s", $config->git->branch, $config->git->repositoryUrl, $config->directories->temporary);
+}
+else
+{
+    $commands[] = sprintf("git --git-dir=\"%s.git\" --work-tree=\"%s\" fetch origin %s", $config->directories->temporary, $config->directories->temporary, $config->git->branch);
+	$commands[] = sprintf('git --git-dir=\"%s.git\" --work-tree=\"%s\" reset --hard FETCH_HEAD', $config->directories->temporary, $config->directories->temporary);
+}
+
+if (!chdir($config->directories->temporary)) {
+    throw new \Exception("The current directory could not be changed to the specified temporary directory.");
+}
+
+
+if ($config->git->updateSubmodules) {
+    $commands[] = "git submodule update --init --recursive";
+}
+
+if (!trim($config->directories->deployment)) {
+    throw new \Exception("The deployment directory specified in the configuration file is currenty blank. Please change this in the configuration file.");
+}
+
+if (!is_dir($config->directories->deployment)) {
+    throw new \Exception("The deployment directory could not be created. Check the user running this script has write permissions on the containing directory.");
+}
+
+$commands[] = sprintf('rsync -rltgoDzvO %s %s', $config->directories->temporary, $config->directories->deployment);
+
+foreach ($commands as $command) {
+    
+	set_time_limit(60*5); // Reset the time limit for each command
+	
+	$output = array();
+	
+	exec($command." 2>&1", $output, $returnCode); // Execute the command
+	
+	if ($returnCode !== 0) {
+		throw new \Exception("Deployment error - Return code ".$returnCode." received when attempting to run command: ".$command);
+	}
 }
 
 ?>
