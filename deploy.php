@@ -20,7 +20,7 @@ if ($config->security->token=="replace_me_with_a_random_string") {
 }
 
 if (!trim($config->security->token)) {
-    throw new \Exception("The security token is currently empty. Please change this in the configuration file.");
+    throw new \Exception("The security token specified in the configuration file is currently blank. Please change this in the configuration file.");
 }
 
 if (!isset($_GET['st'])) {
@@ -32,7 +32,7 @@ if ($_GET['st']!=$config->security->token) {
 }
 
 if (!trim($config->files->lock)) {
-    throw new \Exception("The lock file is currenty empty. Please change this in the configuration file.");
+    throw new \Exception("The lock file specified in the configuration file is currenty blank. Please change this in the configuration file.");
 }
 
 if (file_exists($config->files->lock)) {
@@ -87,5 +87,16 @@ if ($webhookType != "push") {
     throw new \Exception("This does not appear to be a push webhook request. This deployment script accepts push webhook requests only.");
 }
 
+$request = json_decode(http_get_request_body());
+
+if (!$request) {
+    throw new \Exception("Web hook request body was not present or is invalid JSON.");
+}
+
+$fullGitRef = "refs/heads/".$config->git->branch;
+
+if ($request->ref != $fullGitRef) {
+    throw new \Exception("This push was not for the configured branch, therefore it is being ignored. If this is incorrect, please check the branch defined in the configuration file.");
+}
 
 ?>
