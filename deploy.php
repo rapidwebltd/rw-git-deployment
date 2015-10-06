@@ -1,5 +1,19 @@
 <?php
 
+$config = json_decode(file_get_contents(".config.json"));
+
+if (!$config) {
+    throw new \Exception("Unable to parse configuration file. Please ensure the `.config.json` configuration file exists and is valid JSON.");
+}
+
+if ($config->security->token=="replace_me_with_a_random_string") {
+    throw new \Exception("The security token is currently set to the default value. Please change this in the configuration file.");
+}
+
+if (!trim($config->security->token)) {
+    throw new \Exception("The security token is currently empty. Please change this in the configuration file.");
+}
+
 $headers = getallheaders();
 
 $webhookSource = null;

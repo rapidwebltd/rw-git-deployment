@@ -1,4 +1,8 @@
 {
+    "security": {
+        "token": "replace_me_with_a_random_string"
+    },
+    
     "git": {
         "repositoryUrl": "git@192.168.1.2:rapid-web/test-repo.git",
         "branch": "deploy-dev",
