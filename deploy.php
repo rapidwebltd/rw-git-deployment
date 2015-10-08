@@ -93,30 +93,36 @@ if (isset($config->security->checkWebhookHeaders) && $config->security->checkWeb
 $request = json_decode(http_get_request_body());
 
 if (!$request) {
+    deleteLockFile();
     throw new \Exception("Web hook request body was not present or is invalid JSON.");
 }
 
 if (!trim($config->git->branch)) {
+    deleteLockFile();
     throw new \Exception("The git branch specified in the configuration file is currenty blank. Please change this in the configuration file.");
 }
 
 $fullGitRef = "refs/heads/".$config->git->branch;
 
 if ($request->ref != $fullGitRef) {
+    deleteLockFile();
     throw new \Exception("This push was not for the configured branch, therefore it is being ignored. If this is incorrect, please check the branch defined in the configuration file.");
 }
 
 if (!trim($config->git->repositoryUrl)) {
+    deleteLockFile();
     throw new \Exception("The git repository url specified in the configuration file is currenty blank. Please change this in the configuration file.");
 }
 
 if (!trim($config->directories->temporary)) {
+    deleteLockFile();
     throw new \Exception("The temporary directory specified in the configuration file is currenty blank. Please change this in the configuration file.");
 }
 
 if (!is_dir($config->directories->temporary)) {
 
     if (!mkdir($config->directories->temporary)) {
+        deleteLockFile();
         throw new \Exception("The temporary directory could not be created. Check the user running this script has write permissions on the containing directory.");
     }
     
@@ -129,6 +135,7 @@ else
 }
 
 if (!chdir($config->directories->temporary)) {
+    deleteLockFile();
     throw new \Exception("The current directory could not be changed to the specified temporary directory.");
 }
 
@@ -138,10 +145,12 @@ if ($config->git->updateSubmodules) {
 }
 
 if (!trim($config->directories->deployment)) {
+    deleteLockFile();
     throw new \Exception("The deployment directory specified in the configuration file is currenty blank. Please change this in the configuration file.");
 }
 
 if (!is_dir($config->directories->deployment)) {
+    deleteLockFile();
     throw new \Exception("The deployment directory does not seem to exist. Please create the directory or check the directory specified in the configuration file..");
 }
 
@@ -156,6 +165,7 @@ foreach ($commands as $command) {
 	exec($command." 2>&1", $output, $returnCode);
 	
 	if ($returnCode !== 0) {
+	    deleteLockFile();
 		throw new \Exception("Deployment error - Return code ".$returnCode." received when attempting to run command: ".$command);
 	}
 }
