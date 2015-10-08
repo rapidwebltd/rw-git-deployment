@@ -24,6 +24,6 @@
     },
     
     "files": {
-        "lock": ".deploymentLockFile"
+        "lock": "/home/rapidweb/.deploymentLockFile"
     }
 }
