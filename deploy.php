@@ -45,46 +45,49 @@ if (!$result) {
     throw new Exception("There was an error writing to the lock file. Check the user running this script has write permissions on the containing directory.");
 }
 
-$headers = getallheaders();
-
 $webhookSource = null;
 $webhookEvent = null;
 
-foreach($headers as $name => $value) {
+if (isset($config->security->checkWebhookHeaders) && $config->security->checkWebhookHeaders) {
     
-    if ($name == "X-Github-Event"){
+    $headers = apache_request_headers();
+    
+    foreach($headers as $name => $value) {
         
-        $webhookSource = "GitHub";
-        
-        if ($value == "push")
+        if ($name == "X-Github-Event"){
+            
+            $webhookSource = "GitHub";
+            
+            if ($value == "push")
+            {
+                $webhookType = "push";
+            }
+        }
+        elseif ($name == "X-Gitlab-Event")
         {
-            $webhookType = "push";
+            $webhookSource == "GitLab";
+            
+            if ($value == "Push Hook")
+            {
+                $webhookType == "push";
+            }
         }
     }
-    elseif ($name == "X-Gitlab-Event")
-    {
-        $webhookSource == "GitLab";
-        
-        if ($value == "Push Hook")
-        {
-            $webhookType == "push";
-        }
+    
+    if ($webhookSource == null) {
+        deleteLockFile($config->files->lock);
+        throw new \Exception("Unable to identify source of webhook request. This deployment script accepts requests from GitHub and GitLab web hooks only.");
     }
-}
-
-if ($webhookSource == null) {
-    deleteLockFile($config->files->lock);
-    throw new \Exception("Unable to identify source of webhook request. This deployment script accepts requests from GitHub and GitLab web hooks only.");
-}
-
-if ($webhookType == null) {
-    deleteLockFile($config->files->lock);
-    throw new \Exception("Unable to identify type of webhook request. This deployment script accepts push webhook requests only.");
-}
-
-if ($webhookType != "push") {
-    deleteLockFile($config->files->lock);
-    throw new \Exception("This does not appear to be a push webhook request. This deployment script accepts push webhook requests only.");
+    
+    if ($webhookType == null) {
+        deleteLockFile($config->files->lock);
+        throw new \Exception("Unable to identify type of webhook request. This deployment script accepts push webhook requests only.");
+    }
+    
+    if ($webhookType != "push") {
+        deleteLockFile($config->files->lock);
+        throw new \Exception("This does not appear to be a push webhook request. This deployment script accepts push webhook requests only.");
+    }
 }
 
 $request = json_decode(http_get_request_body());
