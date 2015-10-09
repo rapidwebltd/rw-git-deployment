@@ -12,7 +12,7 @@ This system is still in development. We are aiming for the following deployment 
 
 The server that you wish to deploy to must meet the following requirements.
 
-* Linux (maybe OSX, but this is untested)
+* Any modern Linux distrubtion (maybe OSX, but this is untested)
 * git
 * rsync
 * PHP (>=5.3)
