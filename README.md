@@ -10,9 +10,9 @@ This system is still in development. We are aiming for the following deployment 
 
 # Requirements
 
-The server that you wish to deploy to must meet the following requirements.
+The server that you wish to deploy to must meet the following software requirements.
 
-* Any modern Linux distrubtion (maybe OSX, but this is untested)
+* Any modern Linux distribution (maybe OSX, but this is untested)
 * git
 * rsync
 * PHP (>=5.3)
