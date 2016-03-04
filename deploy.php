@@ -170,7 +170,7 @@ if (isset($config->composer)) {
 }
 
 if (isset($config->permissions) && count($config->permissions)) {
-  foreach($permissions as $permission) {
+  foreach($config->permissions as $permission) {
     $commands[] = sprintf('chmod %s %s %s', $permission->octal, $permission->path, $permission->recursive ? '-R' : '');
   }
 }
