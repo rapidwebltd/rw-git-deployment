@@ -131,7 +131,7 @@ if (!trim($config->directories->temporary)) {
 $commands = array();
 
 if (!is_dir($config->directories->temporary)) {
-  if (!mkdir($config->directories->temporary)) {
+  if (!mkdir($config->directories->temporary, 0700, true)) {
       deleteLockFile($config->files->lock);
       throw new \Exception("The temporary directory could not be created. Check the user running this script has write permissions on the containing directory.");
   }
