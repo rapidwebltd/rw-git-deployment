@@ -15,6 +15,14 @@
         "update": true
     },
 
+    "npm": {
+        "install": true,
+        "packages": [
+          "gulp",
+          "bower"
+        ]
+    },
+
     "permissions": [
         { "path": "/home/rapidweb/public_html/test-directory/", "octal": "755", "recursive": true }
     ],

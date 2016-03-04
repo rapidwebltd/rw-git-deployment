@@ -175,6 +175,18 @@ if (isset($config->permissions) && count($config->permissions)) {
   }
 }
 
+if (isset($config->npm)) {
+  if (isset($config->npm->install) && $config->npm->install) {
+    $npmInstallCommand = "npm install";
+    if (isset($config->npm->modules) && count($config->npm->modules)) {
+      foreach($config->npm->modules as $module) {
+        $npmInstallCommand = " ".$module;
+      }
+    }
+    $commands[] = sprintf($npmInstallCommand);
+  }
+}
+
 if (!trim($config->directories->deployment)) {
     deleteLockFile($config->files->lock);
     throw new \Exception("The deployment directory specified in the configuration file is currenty blank. Please change this in the configuration file.");
