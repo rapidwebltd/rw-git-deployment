@@ -130,19 +130,18 @@ if (!trim($config->directories->temporary)) {
 
 $commands = array();
 
-if (!is_dir($config->directories->temporary) || !file_exists($config->directories->temporary.".git")) {
-
-    if (!mkdir($config->directories->temporary)) {
-        deleteLockFile($config->files->lock);
-        throw new \Exception("The temporary directory could not be created. Check the user running this script has write permissions on the containing directory.");
-    }
-
-    $commands[] = sprintf("git clone --depth=1 --branch %s %s %s", $config->git->branch, $config->git->repositoryUrl, $config->directories->temporary);
+if (!is_dir($config->directories->temporary)) {
+  if (!mkdir($config->directories->temporary)) {
+      deleteLockFile($config->files->lock);
+      throw new \Exception("The temporary directory could not be created. Check the user running this script has write permissions on the containing directory.");
+  }
 }
-else
-{
+
+if (!file_exists($config->directories->temporary.".git")) {
+    $commands[] = sprintf("git clone --depth=1 --branch %s %s %s", $config->git->branch, $config->git->repositoryUrl, $config->directories->temporary);
+} else {
     $commands[] = sprintf('git --git-dir="%s.git" --work-tree="%s" fetch origin %s', $config->directories->temporary, $config->directories->temporary, $config->git->branch);
-	$commands[] = sprintf('git --git-dir="%s.git" --work-tree="%s" reset --hard FETCH_HEAD', $config->directories->temporary, $config->directories->temporary);
+	  $commands[] = sprintf('git --git-dir="%s.git" --work-tree="%s" reset --hard FETCH_HEAD', $config->directories->temporary, $config->directories->temporary);
 }
 
 if (!chdir($config->directories->temporary)) {
