@@ -169,6 +169,12 @@ if (isset($config->composer)) {
   }
 }
 
+if (isset($config->permissions) && count($config->permissions)) {
+  foreach($permissions as $permission) {
+    $commands[] = sprintf('chmod %s %s %s', $permission->octal, $permission->path, $permission->recursive ? '-R' : '');
+  }
+}
+
 if (!trim($config->directories->deployment)) {
     deleteLockFile($config->files->lock);
     throw new \Exception("The deployment directory specified in the configuration file is currenty blank. Please change this in the configuration file.");
