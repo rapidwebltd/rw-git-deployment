@@ -8,6 +8,7 @@ The Rapid Web Git Deployment system allows you to deploy a website / web applica
 * Dependency installation is done in a temporary location before
 syncronising with the deployment directory
 * Installation/updating of backend components using `composer`
+* Installation/updating of frontend modules using `npm`
 * Automated running of `gulp` tasks
 * Changing of *nix file and directory permissions
 
