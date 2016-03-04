@@ -3,7 +3,7 @@
 function deleteLockFile($lockFile)
 {
     $result = unlink($lockFile);
-    
+
     if (!$result) {
         throw new \Exception("Unable to delete the lock file. Deployment will be restricted until the lock file is removed.");
     }
@@ -62,15 +62,15 @@ $webhookSource = null;
 $webhookEvent = null;
 
 if (isset($config->security->checkWebhookHeaders) && $config->security->checkWebhookHeaders) {
-    
+
     $headers = apache_request_headers();
-    
+
     foreach($headers as $name => $value) {
-        
+
         if ($name == "X-Github-Event"){
-            
+
             $webhookSource = "GitHub";
-            
+
             if ($value == "push")
             {
                 $webhookType = "push";
@@ -79,24 +79,24 @@ if (isset($config->security->checkWebhookHeaders) && $config->security->checkWeb
         elseif ($name == "X-Gitlab-Event")
         {
             $webhookSource == "GitLab";
-            
+
             if ($value == "Push Hook")
             {
                 $webhookType == "push";
             }
         }
     }
-    
+
     if ($webhookSource == null) {
         deleteLockFile($config->files->lock);
         throw new \Exception("Unable to identify source of webhook request. This deployment script accepts requests from GitHub and GitLab web hooks only.");
     }
-    
+
     if ($webhookType == null) {
         deleteLockFile($config->files->lock);
         throw new \Exception("Unable to identify type of webhook request. This deployment script accepts push webhook requests only.");
     }
-    
+
     if ($webhookType != "push") {
         deleteLockFile($config->files->lock);
         throw new \Exception("This does not appear to be a push webhook request. This deployment script accepts push webhook requests only.");
@@ -142,7 +142,7 @@ if (!is_dir($config->directories->temporary)) {
         deleteLockFile($config->files->lock);
         throw new \Exception("The temporary directory could not be created. Check the user running this script has write permissions on the containing directory.");
     }
-    
+
     $commands[] = sprintf("git clone --depth=1 --branch %s %s %s", $config->git->branch, $config->git->repositoryUrl, $config->directories->temporary);
 }
 else
@@ -160,6 +160,15 @@ if ($config->git->updateSubmodules) {
     $commands[] = "git submodule update --init --recursive";
 }
 
+if (isset($config->composer)) {
+  if (isset($config->composer->install) && $config->composer->install) {
+    $commands[] = sprintf('composer install');
+  }
+  if (isset($config->composer->update) && $config->composer->update) {
+    $commands[] = sprintf('composer update');
+  }
+}
+
 if (!trim($config->directories->deployment)) {
     deleteLockFile($config->files->lock);
     throw new \Exception("The deployment directory specified in the configuration file is currenty blank. Please change this in the configuration file.");
@@ -173,13 +182,13 @@ if (!is_dir($config->directories->deployment)) {
 $commands[] = sprintf('rsync -rltDzvO %s %s', $config->directories->temporary, $config->directories->deployment);
 
 foreach ($commands as $command) {
-    
+
 	set_time_limit(60*5);
-	
+
 	$output = array();
-	
+
 	exec($command." 2>&1", $output, $returnCode);
-	
+
 	if ($returnCode !== 0) {
 	    deleteLockFile($config->files->lock);
 		throw new \Exception("Deployment error - Return code ".$returnCode." received when attempting to run command: ".$command." - ".print_r($output, true));

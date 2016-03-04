@@ -4,7 +4,7 @@ The Rapid Web Git Deployment system allows you to deploy a website / web applica
 
 This system is still in development. We are aiming for the following deployment features.
 
-* Installation/updating of backend component using `composer`
+* Installation/updating of backend component using `composer` - Done
 * Automated running of `gulp` tasks
 * Changing of *nix file and directory permissions
 
