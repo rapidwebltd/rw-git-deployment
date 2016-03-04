@@ -203,7 +203,7 @@ if (isset($config->permissions) && count($config->permissions)) {
 
 foreach ($commands as $command) {
 
-	set_time_limit(60*5);
+	set_time_limit(60*10);
 
 	$output = array();
 
