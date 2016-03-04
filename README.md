@@ -9,7 +9,7 @@ The Rapid Web Git Deployment system allows you to deploy a website / web applica
 * Automated running of `gulp` tasks
 * Changing of *nix file and directory permissions
 
-# Requirements
+## Requirements
 
 The server that you wish to deploy to must meet the following software requirements.
 
@@ -19,7 +19,7 @@ The server that you wish to deploy to must meet the following software requireme
 * PHP (>=5.3)
   * Must be configured to be able to run system commands via `exec()`
 
-## Optional extras
+### Optional extras
 
 If the project you wish to deploy makes use of any of the following, you will need to ensure this software is setup server-side.
 
