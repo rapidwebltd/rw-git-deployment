@@ -52,12 +52,6 @@ if (!$result) {
     throw new Exception("There was an error writing to the lock file. Check the user running this script has write permissions on the containing directory.");
 }
 
-/*$result = chmod($config->files->lock, 0777);
-
-if (!$result) {
-    throw new Exception("There was an error changing the permissions of the lock file.");
-}*/
-
 $webhookSource = null;
 $webhookEvent = null;
 
