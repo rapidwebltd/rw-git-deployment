@@ -130,7 +130,7 @@ if (!trim($config->directories->temporary)) {
 
 $commands = array();
 
-if (!is_dir($config->directories->temporary)) {
+if (!is_dir($config->directories->temporary) || !file_exists($config->directories->temporary.".git")) {
 
     if (!mkdir($config->directories->temporary)) {
         deleteLockFile($config->files->lock);
