@@ -16,10 +16,10 @@ function exceptionHandler($exception) {
 
 set_exception_handler('exceptionHandler');
 
-$config = json_decode(file_get_contents(".config.json"));
+$config = json_decode(file_get_contents("config/.config.json"));
 
 if (!$config) {
-    throw new \Exception("Unable to parse configuration file. Please ensure the `.config.json` configuration file exists and is valid JSON.");
+    throw new \Exception("Unable to parse configuration file. Please ensure the `config/.config.json` configuration file exists and is valid JSON.");
 }
 
 if ($config->security->token=="replace_me_with_a_random_string") {
