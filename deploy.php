@@ -130,10 +130,6 @@ if (!trim($config->directories->temporary)) {
 
 $commands = array();
 
-if (isset($config->directories->home) && is_dir($config->directories->home)) {
-  $commands[] = "export HOME=".$config->directories->home;
-}
-
 if (!is_dir($config->directories->temporary)) {
   if (!mkdir($config->directories->temporary, 0700, true)) {
       deleteLockFile($config->files->lock);
