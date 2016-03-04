@@ -36,7 +36,8 @@
 
     "directories": {
         "temporary": "/home/rapidweb/tempDeploymentDir/",
-        "deployment": "/home/rapidweb/public_html/"
+        "deployment": "/home/rapidweb/public_html/",
+        "home": "/home/rapidweb/"
     },
 
     "files": {
