@@ -23,6 +23,13 @@
         ]
     },
 
+    "gulp": {
+      "tasks": [
+        "js-build",
+        "less"
+      ]
+    }
+
     "permissions": [
         { "path": "/home/rapidweb/public_html/test-directory/", "octal": "755", "recursive": true }
     ],

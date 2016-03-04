@@ -178,12 +178,20 @@ if (isset($config->permissions) && count($config->permissions)) {
 if (isset($config->npm)) {
   if (isset($config->npm->install) && $config->npm->install) {
     $npmInstallCommand = "npm install";
-    if (isset($config->npm->modules) && count($config->npm->modules)) {
-      foreach($config->npm->modules as $module) {
-        $npmInstallCommand = " ".$module;
+    if (isset($config->npm->packages) && count($config->npm->modules)) {
+      foreach($config->npm->packages as $package) {
+        $npmInstallCommand = " ".$package;
       }
     }
     $commands[] = sprintf($npmInstallCommand);
+  }
+}
+
+if (isset($config->gulp)) {
+  if (isset($config->gulp->tasks) && count($config->gulp->tasks)) {
+    foreach($config->gulp->tasks as $gulpTask) {
+      $commands[] = sprintf('gulp %s', $gulpTask);
+    }
   }
 }
 
