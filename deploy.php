@@ -169,12 +169,6 @@ if (isset($config->composer)) {
   }
 }
 
-if (isset($config->permissions) && count($config->permissions)) {
-  foreach($config->permissions as $permission) {
-    $commands[] = sprintf('chmod %s %s %s', $permission->octal, $permission->path, $permission->recursive ? '-R' : '');
-  }
-}
-
 if (isset($config->npm)) {
   if (isset($config->npm->install) && $config->npm->install) {
     $npmInstallCommand = "npm install";
@@ -192,6 +186,12 @@ if (isset($config->gulp)) {
     foreach($config->gulp->tasks as $gulpTask) {
       $commands[] = sprintf('gulp %s', $gulpTask);
     }
+  }
+}
+
+if (isset($config->permissions) && count($config->permissions)) {
+  foreach($config->permissions as $permission) {
+    $commands[] = sprintf('chmod %s %s %s', $permission->octal, $permission->path, $permission->recursive ? '-R' : '');
   }
 }
 
