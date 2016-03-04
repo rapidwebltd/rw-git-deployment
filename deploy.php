@@ -183,12 +183,6 @@ if (isset($config->gulp)) {
   }
 }
 
-if (isset($config->permissions) && count($config->permissions)) {
-  foreach($config->permissions as $permission) {
-    $commands[] = sprintf('chmod %s %s %s', $permission->octal, $permission->path, $permission->recursive ? '-R' : '');
-  }
-}
-
 if (!trim($config->directories->deployment)) {
     deleteLockFile($config->files->lock);
     throw new \Exception("The deployment directory specified in the configuration file is currenty blank. Please change this in the configuration file.");
@@ -200,6 +194,12 @@ if (!is_dir($config->directories->deployment)) {
 }
 
 $commands[] = sprintf('rsync -rltDzvO %s %s', $config->directories->temporary, $config->directories->deployment);
+
+if (isset($config->permissions) && count($config->permissions)) {
+  foreach($config->permissions as $permission) {
+    $commands[] = sprintf('chmod %s %s %s', $permission->octal, $permission->path, $permission->recursive ? '-R' : '');
+  }
+}
 
 foreach ($commands as $command) {
 
