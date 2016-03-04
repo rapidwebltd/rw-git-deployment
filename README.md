@@ -5,7 +5,7 @@ The Rapid Web Git Deployment system allows you to deploy a website / web applica
 ## Features
 
 * Integration with GitHub and GitLab push webhooks
-* Deployment and dependency installation is done in a temporaru location before
+* Dependency installation is done in a temporary location before
 syncronising with the deployment directory
 * Installation/updating of backend components using `composer`
 * Automated running of `gulp` tasks
